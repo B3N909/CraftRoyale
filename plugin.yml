@@ -1,0 +1,7 @@
+name: CraftRoyale
+version: 1.0
+description: Copyright All Rights Reserved @Savant (savant.eclipse) 2016
+main: savant.clashroyale.main.Main
+depend: [Citizens]
+commands:
+  cr:
