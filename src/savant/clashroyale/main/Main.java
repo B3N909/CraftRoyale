@@ -33,11 +33,23 @@ public class Main extends JavaPlugin
 		CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(RoyaleAI.class));
 	}
 	
+	int id = 0;
 	public void onDisable()
 	{
 		for(ArenaGame game : ArenaGame.games.values())
 		{
 			game.forceStop();
 		}
+		
+		System.out.println("[ClashRoyale] Waiting on Game(s) to end");
+		try
+		{
+			Thread.sleep(150L);
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+		System.out.println("[ClashRoyale] All Game(s) ended successfully");
 	}
 }

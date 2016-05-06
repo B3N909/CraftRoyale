@@ -14,7 +14,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import savant.clashroyale.ai.NoStuckAction;
+import savant.clashroyale.ai.TowerAttackAction;
 import savant.clashroyale.ai.RoyaleAI;
 import savant.clashroyale.arena.ArenaGame;
 
@@ -71,7 +71,7 @@ public abstract class Mob
 			npc.setProtected(false);
 			npc.getNavigator().getLocalParameters().distanceMargin(range);
 			
-			npc.getNavigator().getLocalParameters().stuckAction(new NoStuckAction());
+			npc.getNavigator().getLocalParameters().stuckAction(new TowerAttackAction());
 			
 			npc.spawn(location);
 			

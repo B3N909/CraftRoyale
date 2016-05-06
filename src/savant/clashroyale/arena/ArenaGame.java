@@ -1,18 +1,28 @@
 package savant.clashroyale.arena;
 
-import java.io.IOException;
 import java.util.HashMap;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import savant.clashroyale.schematic.Schematic;
-
 public class ArenaGame
 {
 	public static HashMap<Integer, ArenaGame> games = new HashMap<Integer, ArenaGame>();
+
+	public static ArenaGame getGame(Player p)
+	{
+		for(ArenaGame game : games.values())
+		{
+			if(game.getBluePlayer().getName().equalsIgnoreCase(p.getName()) || game.getRedPlayer().getName().equalsIgnoreCase(p.getName()))
+			{
+				return game;
+			}
+		}
+		return null;
+	}
+	
+	
 	
 	int id;
 	boolean isActive = false;
@@ -25,11 +35,32 @@ public class ArenaGame
 	Location blueLeftTower;
 	Location blueRightTower;
 	
+	public Location getRedLeftTower()
+	{
+		return redLeftTower;
+	}
+	public Location getRedRightTower()
+	{
+		return redRightTower;
+	}
+	public Location getBlueLeftTower()
+	{
+		return blueLeftTower;
+	}
+	public Location getBlueRightTower()
+	{
+		return blueRightTower;
+	}
+	
 	ArenaNPCManager npcManager;
+	ArenaDamageManager damageManager;
+	ArenaLaneManager laneManager;
 	
 	public ArenaGame(int id)
 	{
 		this.id = id;
+		this.npcManager = new ArenaNPCManager();
+		this.laneManager = new ArenaLaneManager(this);
 	}
 	
 	public void start(Player redPlayer, Player bluePlayer)
@@ -37,8 +68,10 @@ public class ArenaGame
 		if(ArenaManager.isSetup(id))
 		{
 			isActive = true;
+			
 			this.redPlayer = redPlayer;
 			this.bluePlayer = bluePlayer;
+			
 			redPlayer.teleport(ArenaManager.getRedSpawn(id));
 			bluePlayer.teleport(ArenaManager.getBlueSpawn(id));
 			
@@ -47,11 +80,11 @@ public class ArenaGame
 			blueLeftTower = ArenaManager.getBlueLeftTower(id);
 			blueRightTower = ArenaManager.getBlueRightTower(id);
 			
-			buildLanes();
+			laneManager.buildLanes();
+			
+			damageManager = new ArenaDamageManager(this);
 			
 			games.put(id, this);
-			
-			npcManager = new ArenaNPCManager();
 		}
 		else
 		{
@@ -59,63 +92,13 @@ public class ArenaGame
 			bluePlayer.sendMessage(ChatColor.RED + "Arena " + id + "ID has not been setup properly!");
 		}
 	}
-	
-	public ArenaNPCManager getNPCManager()
-	{
-		return npcManager;
-	}
-	
 	public void stop()
 	{
-		destroyLanes();
+		laneManager.destroyLanes();
+		damageManager.destroy();
 		games.remove(id, this);
 		isActive = false;
 	}
-	
-	public boolean isActive()
-	{
-		return this.isActive;
-	}
-	
-	private void buildLanes()
-	{
-		//TODO: Add Tower Tiers
-		try
-		{
-			Schematic tower = Schematic.parseSchematic("tower_t1");
-			Schematic.pasteCenteredSchematic(redLeftTower, tower, redPlayer);
-			Schematic.pasteCenteredSchematic(redRightTower, tower, redPlayer);
-			Schematic.pasteCenteredSchematic(blueLeftTower, tower, bluePlayer);
-			Schematic.pasteCenteredSchematic(blueRightTower, tower, bluePlayer);
-		}
-		catch (IOException e)
-		{
-			isActive = false;
-			redPlayer.sendMessage(ChatColor.RED + "Arena " + id + "ID has not been setup properly!");
-			bluePlayer.sendMessage(ChatColor.RED + "Arena " + id + "ID has not been setup properly!");
-			e.printStackTrace();
-		}
-	}
-	
-	private void destroyLanes()
-	{
-		try
-		{
-			Schematic tower = Schematic.parseSchematic("tower_t1");
-			Schematic.airCenteredSchematic(redLeftTower, tower, redPlayer);
-			Schematic.airCenteredSchematic(redRightTower, tower, redPlayer);
-			Schematic.airCenteredSchematic(blueLeftTower, tower, bluePlayer);
-			Schematic.airCenteredSchematic(blueRightTower, tower, bluePlayer);
-		}
-		catch (IOException e)
-		{
-			isActive = false;
-			redPlayer.sendMessage(ChatColor.RED + "Arena " + id + "ID has not been setup properly!");
-			bluePlayer.sendMessage(ChatColor.RED + "Arena " + id + "ID has not been setup properly!");
-			e.printStackTrace();
-		}
-	}
-
 	public void forceStop()
 	{
 		redPlayer.sendMessage(ChatColor.DARK_PURPLE + "Game force stopped by Server");
@@ -123,11 +106,25 @@ public class ArenaGame
 		stop();
 	}
 	
+	public ArenaNPCManager getNPCManager()
+	{
+		return npcManager;
+	}
+	public ArenaLaneManager getLaneManager()
+	{
+		return laneManager;
+	}
+
+	
+	public boolean isActive()
+	{
+		return this.isActive;
+	}
+
 	public Player getBluePlayer()
 	{
 		return bluePlayer;
 	}
-
 	public Player getRedPlayer()
 	{
 		return redPlayer;
@@ -158,7 +155,6 @@ public class ArenaGame
 		}
 		return null;
 	}
-	
 	public Location getRightLane(Player p)
 	{
 		ArenaTeam team = getTeam(p);
@@ -172,7 +168,6 @@ public class ArenaGame
 		}
 		return null;
 	}
-	
 	public Location getEnemyLeftLane(Player p)
 	{
 		ArenaTeam team = getTeam(p);
@@ -186,7 +181,6 @@ public class ArenaGame
 		}
 		return null;
 	}
-	
 	public Location getEnemyRightLane(Player p)
 	{
 		ArenaTeam team = getTeam(p);
@@ -200,16 +194,5 @@ public class ArenaGame
 		}
 		return null;
 	}
-	
-	public static ArenaGame getGame(Player p)
-	{
-		for(ArenaGame game : games.values())
-		{
-			if(game.getBluePlayer().getName().equalsIgnoreCase(p.getName()) || game.getRedPlayer().getName().equalsIgnoreCase(p.getName()))
-			{
-				return game;
-			}
-		}
-		return null;
-	}
+
 }

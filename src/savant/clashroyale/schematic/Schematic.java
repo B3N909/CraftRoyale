@@ -111,7 +111,7 @@ public class Schematic {
 				for (int z = 0; z < length; z++) 
 				{
 					final int fZ = z;
-						Bukkit.getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("ClashRoyale"),new Runnable(){
+						Bukkit.getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("CraftRoyale"),new Runnable(){
 							@SuppressWarnings("deprecation")
 							public void run()
 							{
@@ -147,7 +147,7 @@ public class Schematic {
 				for (int z = 0; z < length; z++) 
 				{
 					final int fZ = z;
-						Bukkit.getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("ClashRoyale"),new Runnable(){
+						Bukkit.getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("CraftRoyale"),new Runnable(){
 							@SuppressWarnings("deprecation")
 							public void run()
 							{
@@ -189,7 +189,7 @@ public class Schematic {
 				for (int z = 0; z < length; z++) 
 				{
 					final int fZ = z;
-						Bukkit.getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("ClashRoyale"),new Runnable(){
+						Bukkit.getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("CraftRoyale"),new Runnable(){
 							@SuppressWarnings("deprecation")
 							public void run()
 							{
@@ -199,7 +199,7 @@ public class Schematic {
 								p.playEffect(block.getLocation(), Effect.ZOMBIE_CHEW_WOODEN_DOOR, 15);
 							}
 						},i * x + i * y + i * z);
-						Bukkit.getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("ClashRoyale"), new Runnable()
+						Bukkit.getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("CraftRoyale"), new Runnable()
 						{
 							public void run()
 							{
