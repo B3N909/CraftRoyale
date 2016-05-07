@@ -114,7 +114,10 @@ public class ArenaGame
 	{
 		return laneManager;
 	}
-
+	public ArenaDamageManager getTowerManager()
+	{
+		return damageManager;
+	}
 	
 	public boolean isActive()
 	{

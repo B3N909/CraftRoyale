@@ -25,7 +25,7 @@ public class ArenaDamageManager
 	int redLeftHealth;
 	int redRightHealth;
 	
-	int maxHealth = 1500;
+	int maxHealth = 2000;
 	
 	public ArenaDamageManager(ArenaGame arena)
 	{
@@ -46,30 +46,49 @@ public class ArenaDamageManager
 	{
 		if(tower == ArenaTower.BLUE_LEFT)
 		{
-			blueLeftHealth -= damage;
+			blueLeftHealth = blueLeftHealth - damage;
+			
+			if(blueLeftHealth <= 0)
+			{
+				blueLeftHealth = 1;
+			}
 		}
 		else if(tower == ArenaTower.BLUE_RIGHT)
 		{
-			blueRightHealth -= damage;
+			blueRightHealth = blueRightHealth - damage;
+			
+			if(blueRightHealth <= 0)
+			{
+				blueRightHealth = 1;
+			}
 		}
 		else if(tower == ArenaTower.RED_LEFT)
 		{
-			redLeftHealth -= damage;
+			redLeftHealth = redLeftHealth - damage;
+			
+			if(redLeftHealth <= 0)
+			{
+				redLeftHealth = 1;
+			}
 		}
 		else if(tower == ArenaTower.RED_RIGHT)
 		{
-			redRightHealth -= damage;
+			redRightHealth = redRightHealth - damage;
+			
+			if(redRightHealth <= 0)
+			{
+				redRightHealth = 1;
+			}
 		}
 		update();
 	}
 	
 	public void update()
 	{
-		blueLeft.setRatio(blueLeftHealth, maxHealth);
-		blueRight.setRatio(blueRightHealth, maxHealth);
-
-		redLeft.setRatio(redLeftHealth, maxHealth);
-		redRight.setRatio(redRightHealth, maxHealth);
+		blueLeft.setDirect((float)(((float)blueLeftHealth) / ((float) maxHealth)));
+		blueRight.setDirect((float)(((float)blueRightHealth) / ((float) maxHealth)));
+		redLeft.setDirect((float)(((float)redLeftHealth) / ((float) maxHealth)));
+		redRight.setDirect((float)(((float)redRightHealth) / ((float) maxHealth)));
 	}
 	
 	public void destroy()

@@ -432,6 +432,7 @@ public class ProgressBar {
 	 * @param denominator
 	 */
 	public void setRatio (int numerator, int denominator) {
+		System.out.println("Received : " + numerator + " / " + denominator);
 		if (denominator == 0) {
 			throw new IllegalArgumentException ("Denominator cannot be 0.");
 		}
@@ -450,7 +451,7 @@ public class ProgressBar {
 	 * 
 	 */
 	public void setDirect (float ammount) {
-		if (ammount <= 0 && ammount >= 1) {
+		if (ammount >= 0 && ammount <= 1) {
 			percentFilled = ammount;
 			update();
 		} else {

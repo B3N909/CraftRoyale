@@ -69,6 +69,8 @@ public class RoyaleAI extends Trait
 		npc.getNavigator().getLocalParameters().avoidWater(true);
 		npc.getNavigator().getLocalParameters().range(200);
 		
+		((TowerAttackAction)npc.getNavigator().getLocalParameters().stuckAction()).init(arena);
+		
 		npc.getDefaultGoalController().addGoal(new LaneGoal(npc, arena, p), 2);
 	}
 }
